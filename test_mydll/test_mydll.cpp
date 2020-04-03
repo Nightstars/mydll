@@ -17,7 +17,7 @@ int main()
 	PLUSFUNC1 add1 = (PLUSFUNC1)GetProcAddress(hDllInst, "add1");
 	PLUSFUNC2 add2 = (PLUSFUNC2)GetProcAddress(hDllInst, "add2");
 
-	int num(10),num1(100),a(12),b(4),result;
+	int num(10),num1(100),a(18),b(24),result;
 
 	add(&num);
 	cout << num << endl;
