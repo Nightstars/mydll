@@ -6,7 +6,8 @@
 using namespace std;
 int main()
 {
-	typedef void(*PLUSFUNC)(int*);
+#pragma region demo
+	/*typedef void(*PLUSFUNC)(int*);
 	typedef void(*PLUSFUNC1)(int*);
 	typedef void(*PLUSFUNC2)(int,int,int *);
 	HINSTANCE hDllInst;
@@ -26,9 +27,20 @@ int main()
 	cout << num1 << endl;
 
 	add2(a, b, &result);
-	cout << result << endl;
+	cout << result << endl;*/
+#pragma endregion
 
+#pragma region testdll
+	typedef void(*PLUSFUNC)(int*);
+	HINSTANCE hDllInst;
+	hDllInst = LoadLibrary(L"commander.dll");
+	PLUSFUNC add = (PLUSFUNC)GetProcAddress(hDllInst, "add");
+	int num(10);
+	add(&num);
+	cout << num << endl;
 	FreeLibrary(hDllInst);
+#pragma endregion
+	
 	system("pause");
 }
 
