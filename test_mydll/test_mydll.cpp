@@ -37,7 +37,7 @@ int main()
 	hDllInst = LoadLibrary("commander.dll");
 	PLUSFUNC execmd = (PLUSFUNC)GetProcAddress(hDllInst, "execmd");
 	char result[1024 * 4] = "";                   //定义存放结果的字符串数组 
-	if (1 == execmd("ping 127.0.0.1", result)) {
+	if (1 == execmd("ipconfig", result)) {
 		printf(result);
 	}
 	FreeLibrary(hDllInst);
