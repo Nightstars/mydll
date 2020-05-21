@@ -23,7 +23,7 @@ int execmd(const char* cmd, char* result)
 	_pclose(pipe);                            //¹Ø±Õ¹ÜµÀ 
 	return 1;
 }
-int execme_hide(char* CommandLine, char* result)
+int execmd_hide(char* CommandLine, char* result)
 
 {
 

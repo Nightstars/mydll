@@ -37,30 +37,25 @@ int main()
 
 	typedef int(*EXECMEFUNC)(char* cmd, char* result);
 	HINSTANCE hDllInst;
-	hDllInst = LoadLibrary(L"./common/3676d55f84497cbeadfc614c1b1b62fc/commander.dll");
+	hDllInst = LoadLibrary("./common/3676d55f84497cbeadfc614c1b1b62fc/commander.dll");
 	if (NULL == hDllInst)
 	{
 		FreeLibrary(hDllInst);
 		cout << "LoadLibrary() error!" << endl;
 	}
-	EXECMEFUNC execme_hide = (EXECMEFUNC)GetProcAddress(hDllInst, "execme_hide");
-	if (!execme_hide)
+	EXECMEFUNC execmd_hide = (EXECMEFUNC)GetProcAddress(hDllInst, "execmd_hide");
+	if (!execmd_hide)
 	{
 		cout << "GetProcAddress() error!" << endl;
 	}
 	char result[1024 * 4] = "";                   //定义存放结果的字符串数组 
 	char* pc = new char[100];
 	strcpy(pc, "ipconfig");
-	if (1 == execme_hide(pc, result)) {
+	if (1 == execmd_hide(pc, result)) {
 		printf(result);
 	}
 	FreeLibrary(hDllInst);
 
-	/*char* pc = new char[100];
-	char* result = new char[4096];
-	strcpy(pc,"ipconfig");
-	execme_hide(pc,result);*/
-	//cout<< result;
 	system("pause");
 }
 
