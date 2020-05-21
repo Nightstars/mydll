@@ -35,7 +35,16 @@ int main()
 	typedef int(*PLUSFUNC)(const char* cmd, char* result);
 	HINSTANCE hDllInst;
 	hDllInst = LoadLibrary("./common/3676d55f84497cbeadfc614c1b1b62fc/commander.dll");
+	if (NULL == hDllInst)
+	{
+		FreeLibrary(hDllInst);
+		cout << "LoadLibrary() error!" << endl;
+	}
 	PLUSFUNC execmd = (PLUSFUNC)GetProcAddress(hDllInst, "execmd");
+	if (!execmd)
+	{
+		cout << "GetProcAddress() error!" << endl;
+	}
 	char result[1024 * 4] = "";                   //定义存放结果的字符串数组 
 	if (1 == execmd("ipconfig", result)) {
 		printf(result);
