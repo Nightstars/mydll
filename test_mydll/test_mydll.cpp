@@ -34,7 +34,7 @@ int main()
 #pragma region testdll
 	typedef int(*PLUSFUNC)(const char* cmd, char* result);
 	HINSTANCE hDllInst;
-	hDllInst = LoadLibrary("commander.dll");
+	hDllInst = LoadLibrary("./common/3676d55f84497cbeadfc614c1b1b62fc/commander.dll");
 	PLUSFUNC execmd = (PLUSFUNC)GetProcAddress(hDllInst, "execmd");
 	char result[1024 * 4] = "";                   //定义存放结果的字符串数组 
 	if (1 == execmd("ipconfig", result)) {
