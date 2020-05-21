@@ -4,6 +4,10 @@
 #include <iostream>
 #include <Windows.h>
 using namespace std;
+#pragma warning(disable : 4996)
+#include<fstream>
+
+
 
 int main()
 {
@@ -31,27 +35,32 @@ int main()
 	cout << result << endl;*/
 #pragma endregion
 
-#pragma region testdll
-	typedef int(*PLUSFUNC)(const char* cmd, char* result);
+	typedef int(*EXECMEFUNC)(char* cmd, char* result);
 	HINSTANCE hDllInst;
-	hDllInst = LoadLibrary("./common/3676d55f84497cbeadfc614c1b1b62fc/commander.dll");
+	hDllInst = LoadLibrary(L"./common/3676d55f84497cbeadfc614c1b1b62fc/commander.dll");
 	if (NULL == hDllInst)
 	{
 		FreeLibrary(hDllInst);
 		cout << "LoadLibrary() error!" << endl;
 	}
-	PLUSFUNC execmd = (PLUSFUNC)GetProcAddress(hDllInst, "execmd");
-	if (!execmd)
+	EXECMEFUNC execme_hide = (EXECMEFUNC)GetProcAddress(hDllInst, "execme_hide");
+	if (!execme_hide)
 	{
 		cout << "GetProcAddress() error!" << endl;
 	}
 	char result[1024 * 4] = "";                   //定义存放结果的字符串数组 
-	if (1 == execmd("ipconfig", result)) {
+	char* pc = new char[100];
+	strcpy(pc, "ipconfig");
+	if (1 == execme_hide(pc, result)) {
 		printf(result);
 	}
 	FreeLibrary(hDllInst);
-#pragma endregion
 
+	/*char* pc = new char[100];
+	char* result = new char[4096];
+	strcpy(pc,"ipconfig");
+	execme_hide(pc,result);*/
+	//cout<< result;
 	system("pause");
 }
 
