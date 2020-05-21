@@ -4,6 +4,7 @@
 #include <iostream>
 #include <Windows.h>
 using namespace std;
+
 int main()
 {
 #pragma region demo
@@ -31,16 +32,17 @@ int main()
 #pragma endregion
 
 #pragma region testdll
-	typedef void(*PLUSFUNC)(int*);
+	typedef int(*PLUSFUNC)(const char* cmd, char* result);
 	HINSTANCE hDllInst;
-	hDllInst = LoadLibrary(L"commander.dll");
-	PLUSFUNC add = (PLUSFUNC)GetProcAddress(hDllInst, "add");
-	int num(10);
-	add(&num);
-	cout << num << endl;
+	hDllInst = LoadLibrary("commander.dll");
+	PLUSFUNC execmd = (PLUSFUNC)GetProcAddress(hDllInst, "execmd");
+	char result[1024 * 4] = "";                   //定义存放结果的字符串数组 
+	if (1 == execmd("ping 127.0.0.1", result)) {
+		printf(result);
+	}
 	FreeLibrary(hDllInst);
 #pragma endregion
-	
+
 	system("pause");
 }
 
