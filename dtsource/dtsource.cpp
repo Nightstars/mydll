@@ -35,8 +35,8 @@ int q_base(const char* db_url, const char* db_name, const char* db_sql)
 		vector<string> vec = { "use", " ", db_name };
 		string db_name_new ="";
 		db_name_new=accumulate(vec.begin(), vec.end(), db_name_new);
-		pMyConnect->Execute(db_name_new.c_str(), NULL, adCmdText);//执行SQL： select * from gendat 
-		pRst = pMyConnect->Execute(db_sql, NULL, adCmdText);//执行SQL： select * from gendat 
+		pMyConnect->Execute(db_name_new.c_str(), NULL, adCmdText);//执行SQL
+		pRst = pMyConnect->Execute(db_sql, NULL, adCmdText);//执行SQL
 		//Table_1是数据库SchoolTemp的表名
 		if (!pRst->adoEOF)
 		{
