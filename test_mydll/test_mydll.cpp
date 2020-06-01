@@ -4,6 +4,10 @@
 #include <iostream>
 #include <Windows.h>
 using namespace std;
+#pragma warning(disable : 4996)
+#include<fstream>
+
+
 
 int main()
 {
@@ -48,9 +52,9 @@ int main()
 	HINSTANCE hDllInst;
 	hDllInst = LoadLibrary("dtsource.dll");
 	QBASEFUNC q_base = (QBASEFUNC)GetProcAddress(hDllInst, "q_base");
-	char db_url[1024 * 4] = "Provider=SQLOLEDB; Server=192.168.0.187,1433\MSSQLSERVER;Database=CMS; uid=sa; pwd=Ihavenoidea@0;"; 
-	char db_name[1024] ="CMS"; 
-	char db_sql[1024 * 4] = "SELECT TOP(3) * FROM COP_ACT_HEAD"; 
+	char db_url[1024 * 4] = "Provider=SQLOLEDB; Server=192.168.0.187,1433\MSSQLSERVER;Database=CMS; uid=sa; pwd=Ihavenoidea@0;";
+	char db_name[1024] = "CMS";
+	char db_sql[1024 * 4] = "SELECT TOP(3) * FROM COP_ACT_HEAD";
 	/*if (1 == execmd("ping 127.0.0.1", result)) {
 		printf(result);
 	}*/
