@@ -8,7 +8,7 @@ using namespace std;
 //步骤1：添加对ADO的支持  
 #import "C:/Program Files/Common Files/System/ado/msado15.dll" no_namespace rename("EOF","adoEOF")rename("BOF","doBOF")  
 
-int q_base(const char* db_url, const char* db_name, const char* db_sql)
+int q_base(const char* db_url, const char* db_name, const char* db_sql, const char* result)
 {
 	CoInitialize(NULL); //初始化COM环境           
 	_ConnectionPtr pMyConnect(__uuidof(Connection));//定义连接对象并实例化对象 
