@@ -18,7 +18,6 @@ int q_base(const char* db_url, const char* db_name, const char* db_sql)
 		//步骤2：创建数据源连接
 		/*打开数据库“SQLServer”，这里需要根据自己PC的数据库的情况 */
 		pMyConnect->Open(db_url, "", "", adModeUnknown);
-		//注意：计算机全名可以在计算机的属性查看，SchoolTemp是数据库名，账户如sa
 	}
 	catch (_com_error& e)
 	{
@@ -37,7 +36,7 @@ int q_base(const char* db_url, const char* db_name, const char* db_sql)
 		db_name_new=accumulate(vec.begin(), vec.end(), db_name_new);
 		pMyConnect->Execute(db_name_new.c_str(), NULL, adCmdText);//执行SQL
 		pRst = pMyConnect->Execute(db_sql, NULL, adCmdText);//执行SQL
-		//Table_1是数据库SchoolTemp的表名
+		//Table_1是数据库的表名
 		if (!pRst->adoEOF)
 		{
 			pRst->MoveFirst();
