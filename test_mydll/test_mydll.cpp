@@ -31,15 +31,30 @@ int main()
 	cout << result << endl;*/
 #pragma endregion
 
-#pragma region testdll
-	typedef int(*PLUSFUNC)(const char* cmd, char* result);
+#pragma region test_dll_commander
+	//typedef int(*PLUSFUNC)(const char* cmd, char* result);
+	//HINSTANCE hDllInst;
+	//hDllInst = LoadLibrary("commander.dll");
+	//PLUSFUNC execmd = (PLUSFUNC)GetProcAddress(hDllInst, "execmd");
+	//char result[1024 * 4] = "";                   //定义存放结果的字符串数组 
+	//if (1 == execmd("ping 127.0.0.1", result)) {
+	//	printf(result);
+	//}
+	//FreeLibrary(hDllInst);
+#pragma endregion
+
+#pragma region test_dll_dasource
+	typedef int(*QBASEFUNC)(const char* db_url, const char* db_name, const char* db_sql);
 	HINSTANCE hDllInst;
-	hDllInst = LoadLibrary("commander.dll");
-	PLUSFUNC execmd = (PLUSFUNC)GetProcAddress(hDllInst, "execmd");
-	char result[1024 * 4] = "";                   //定义存放结果的字符串数组 
-	if (1 == execmd("ping 127.0.0.1", result)) {
+	hDllInst = LoadLibrary("dtsource.dll");
+	QBASEFUNC q_base = (QBASEFUNC)GetProcAddress(hDllInst, "q_base");
+	char db_url[1024 * 4] = "Provider=SQLOLEDB; Server=192.168.0.187,1433\MSSQLSERVER;Database=CMS; uid=sa; pwd=Ihavenoidea@0;"; 
+	char db_name[1024] ="CMS"; 
+	char db_sql[1024 * 4] = "SELECT TOP(3) * FROM COP_ACT_HEAD"; 
+	/*if (1 == execmd("ping 127.0.0.1", result)) {
 		printf(result);
-	}
+	}*/
+	q_base(db_url, db_name, db_sql);
 	FreeLibrary(hDllInst);
 #pragma endregion
 
