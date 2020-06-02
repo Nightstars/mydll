@@ -100,3 +100,18 @@ int q_base(const char* db_url, const char* db_name, const char* db_sql, char* re
 	CoUninitialize(); // Õ∑≈COMª∑æ≥
 	return 1;
 }
+
+int q_rcnum(const char* db_url, const char* db_name, const char* db_sql, char** result)
+{
+	return 0;
+}
+
+int q_db(const char* db_url, const char* db_name, const char* db_sql, char** result)
+{
+	return 0;
+}
+
+int q_dt(const char* db_url, const char* db_name, const char* db_sql, char** result)
+{
+	return 0;
+}

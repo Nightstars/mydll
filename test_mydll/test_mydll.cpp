@@ -48,13 +48,33 @@ int main()
 #pragma endregion
 
 #pragma region tow_dimensional pointer
-	char* name[4] = {};
+	/*char* name[4] = {};
 	name[0] = const_cast<char*>("test");
 	name[1] = const_cast<char*>("multiply");
 	name[2] = const_cast<char*>("string");
 	cout << name[0] << endl;
 	cout << name[1] << endl;
-	cout << name[2] << endl;
+	cout << name[2] << endl;*/
+
+	int n(2);
+	char** pchar = NULL;
+	pchar = (char**)malloc(n* sizeof(char*)*100000); // pchar其实就是一个char * []数组
+	for (int i(0); i < n; i++)
+	{
+		*(pchar + i) = (char*)malloc(n * sizeof(char) * 100000);
+	}
+		pchar[0] = const_cast<char*>("test");
+		pchar[1] = const_cast<char*>("multiply");
+		cout << pchar[0] << endl;
+		cout << pchar[1] << endl;
+
+		for (int i(0); i < n; i++)
+		{
+			pchar[i] = nullptr;
+			free(pchar[i]);
+		}
+		free(pchar);
+
 #pragma endregion
 
 
