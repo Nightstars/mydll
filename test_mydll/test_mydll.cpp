@@ -47,22 +47,33 @@ int main()
 	//FreeLibrary(hDllInst);
 #pragma endregion
 
+#pragma region tow_dimensional pointer
+	char* name[4] = {};
+	name[0] = const_cast<char*>("test");
+	name[1] = const_cast<char*>("multiply");
+	name[2] = const_cast<char*>("string");
+	cout << name[0] << endl;
+	cout << name[1] << endl;
+	cout << name[2] << endl;
+#pragma endregion
+
+
 #pragma region test_dll_dasource
-	typedef int(*QBASEFUNC)(const char* db_url, const char* db_name, const char* db_sql);
-	HINSTANCE hDllInst;
-	hDllInst = LoadLibrary("dtsource.dll");
-	QBASEFUNC q_base = (QBASEFUNC)GetProcAddress(hDllInst, "q_base");
-	const char* db_url =(char *)malloc(1024 * sizeof(char));
-	const char* db_name =(char *)malloc(256 * sizeof(char));
-	const char* db_sql =(char *)malloc(4048 * sizeof(char));
-	db_url = "Provider=SQLOLEDB; Server=192.168.0.187,1433\MSSQLSERVER;Database=CMS; uid=sa; pwd=Ihavenoidea@0;";
-	db_name= "CMS";
-	db_sql= "SELECT TOP(3) * FROM COP_ACT_HEAD";
-	/*if (1 == execmd("ping 127.0.0.1", result)) {
-		printf(result);
-	}*/
-	q_base(db_url, db_name, db_sql);
-	FreeLibrary(hDllInst);
+	//typedef int(*QBASEFUNC)(const char* db_url, const char* db_name, const char* db_sql);
+	//HINSTANCE hDllInst;
+	//hDllInst = LoadLibrary("dtsource.dll");
+	//QBASEFUNC q_base = (QBASEFUNC)GetProcAddress(hDllInst, "q_base");
+	//const char* db_url =(char *)malloc(1024 * sizeof(char));
+	//const char* db_name =(char *)malloc(256 * sizeof(char));
+	//const char* db_sql =(char *)malloc(4048 * sizeof(char));
+	//db_url = "Provider=SQLOLEDB; Server=192.168.0.187,1433\MSSQLSERVER;Database=CMS; uid=sa; pwd=Ihavenoidea@0;";
+	//db_name= "CMS";
+	//db_sql= "SELECT TOP(3) * FROM COP_ACT_HEAD";
+	///*if (1 == execmd("ping 127.0.0.1", result)) {
+	//	printf(result);
+	//}*/
+	//q_base(db_url, db_name, db_sql);
+	//FreeLibrary(hDllInst);
 #pragma endregion
 
 	system("pause");
