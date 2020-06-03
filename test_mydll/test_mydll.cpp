@@ -6,7 +6,8 @@
 using namespace std;
 #pragma warning(disable : 4996)
 #include<fstream>
-
+#include <vector>
+#include <numeric> // for std::accumulate
 
 
 int main()
@@ -33,6 +34,11 @@ int main()
 
 	add2(a, b, &result);
 	cout << result << endl;*/
+
+	//using namespace std;
+	//vector<string> vec = { "hello", " ", "world" };
+	//string s = accumulate(vec.begin(), vec.end(), s);
+	//cout << s << endl; // prints 'hello world' to standard output. 
 #pragma endregion
 
 #pragma region test_dll_commander
@@ -56,44 +62,73 @@ int main()
 	cout << name[1] << endl;
 	cout << name[2] << endl;*/
 
-	int n(2);
-	char** pchar = NULL;
-	pchar = (char**)malloc(n* sizeof(char*)*100000); // pchar其实就是一个char * []数组
-	for (int i(0); i < n; i++)
-	{
-		*(pchar + i) = (char*)malloc(n * sizeof(char) * 100000);
-	}
-		pchar[0] = const_cast<char*>("test");
-		pchar[1] = const_cast<char*>("multiply");
-		cout << pchar[0] << endl;
-		cout << pchar[1] << endl;
+	//int n(2);
+	//char** pchar = NULL;
+	//pchar = (char**)malloc(n* sizeof(char*)*100000); // pchar其实就是一个char * []数组
+	//for (int i(0); i < n; i++)
+	//{
+	//	*(pchar + i) = (char*)malloc(n * sizeof(char) * 100000);
+	//}
+	//	pchar[0] = const_cast<char*>("test");
+	//	pchar[1] = const_cast<char*>("multiply");
+	//	cout << pchar[0] << endl;
+	//	cout << pchar[1] << endl;
 
-		for (int i(0); i < n; i++)
-		{
-			pchar[i] = nullptr;
-			free(pchar[i]);
-		}
-		free(pchar);
+	//	for (int i(0); i < n; i++)
+	//	{
+	//		pchar[i] = nullptr;
+	//		free(pchar[i]);
+	//	}
+	//	free(pchar);
 
 #pragma endregion
 
 
 #pragma region test_dll_dasource
-	typedef int(*QBASEFUNC)(const char* db_url, const char* db_name, const char* db_sql);
+	//typedef int(*QBASEFUNC)(const char* db_url, const char* db_name, const char* db_sql, char** result);
+	typedef int(*QBASEFUNC)(const char* db_url, const char* db_name, const char* db_sql, char** result);
 	HINSTANCE hDllInst;
 	hDllInst = LoadLibrary("dtsource.dll");
-	QBASEFUNC q_base = (QBASEFUNC)GetProcAddress(hDllInst, "q_base");
+	QBASEFUNC q_rcnum = (QBASEFUNC)GetProcAddress(hDllInst, "q_rc");
 	const char* db_url =(char *)malloc(1024 * sizeof(char));
-	const char* db_name =(char *)malloc(256 * sizeof(char));
-	const char* db_sql =(char *)malloc(4048 * sizeof(char));
-	db_url = "Provider=SQLOLEDB; Server=173.82.119.30,6003\MSSQLSERVER;Database=CMS; uid=sa; pwd=Ihavenoidea@0;";
-	db_name= "CMS";
-	db_sql= "SELECT TOP(3) * FROM COP_ACT_HEAD";
-	/*if (1 == execmd("ping 127.0.0.1", result)) {
-		printf(result);
-	}*/
-	q_base(db_url, db_name, db_sql);
+	const char* db_name =(char *)malloc(128 * sizeof(char));
+	const char* dt_name =(char *)malloc(128 * sizeof(char));
+	const char* db_sql =(char *)malloc(4096 * sizeof(char));
+	db_url = "Provider=SQLOLEDB; Server=192.168.0.187,1433\MSSQLSERVER;Database=CMS; uid=sa; pwd=Ihavenoidea@0;";
+	db_name= "PUB_PARA";
+	dt_name= "CURR";
+	db_sql= "SELECT * FROM CURR";
+	int n(8);
+	char** pchar = NULL;
+	pchar = (char**)malloc(n* sizeof(char*)); // pchar其实就是一个char * []数组
+	for (int i(0); i < n; i++)
+	{
+		*(pchar + i) = (char*)malloc(64*1819*sizeof(char));
+	}
+
+	int stat=q_rcnum(db_url,db_name,db_sql,pchar);
+	if (stat == 1) {
+		cout << "status：" << *(pchar + 0) << endl;
+		cout << "clumsize：" << *(pchar + 3) << endl;
+		cout << "clums：" << *(pchar + 4) << endl;
+		cout << "recoders：" << *(pchar + 5) << endl;
+		cout << "clum_name：" << *(pchar + 6) << endl;
+		cout << "rc_name：" << *(pchar + 7) << endl;
+	}
+	else {
+		cout << "status：" << *(pchar + 0) << endl;
+		cout << "Description：" <<*(pchar + 1) << endl;
+	}
+	
+	
+	//q_base(db_url, db_name, db_sql);
 	FreeLibrary(hDllInst);
+	for (int i(0); i < n; i++)
+	{
+		pchar[i] = nullptr;
+		free(pchar[i]);
+	}
+	free(pchar);
 #pragma endregion
 
 	system("pause");
