@@ -136,32 +136,51 @@ int main()
 	//fs.write("\r\n!\r\n!\r\n!", 15);
 	//fs.close();
 
-	int i = 0, num;
-	char str[100][500] = { 0 }, linedata[100] = { 0 };
-	FILE* fp = fopen("F:\\vsstudio\\mydll\\x64\\Debug\\test.txt", "r");
+	int i = 0, num, n(50);
+	char** pchar = NULL;
+	pchar = (char**)malloc(n* sizeof(char*)); // pchar其实就是一个char * []数组
+	for (int i(0); i < n; i++)
+	{
+		*(pchar + i) = (char*)calloc(1024*4,sizeof(char));
+	}
+	char linedata[4096] = { 0 };
+	FILE* fp = fopen("E:\\visualStudio_proj\\mydll\\x64\\Debug\\test.txt", "r");
+	if (fp == NULL) {
+		cout<<"打开文件时发生错误"<<endl;
+		return 0;
+	}
 	FILE* fpw;
 	while (fgets(linedata, sizeof(linedata) - 1, fp))
 	{
 		if (strcmp(linedata, "[{$1$}]\n") == 0|| strcmp(linedata, "[{$1$}]") == 0)
 		{
-			strcpy(str[i], "this\nis\ngenc\ntest\n");
+			strcpy(*(pchar + i), "this\nis\ngenc\ntest\n");
 		}
 		else
 		{
-			strcpy(str[i], linedata);
+			strcpy(*(pchar + i), linedata);
 		}
 		i++;
 	}
 	fclose(fp);
 	num = i;
-	fpw = fopen("F:\\vsstudio\\mydll\\x64\\Debug\\temp.txt", "w");
+	fpw = fopen("E:\\visualStudio_proj\\mydll\\x64\\Debug\\temp.txt", "w");
+	if (fpw == NULL) {
+		cout << "打开文件时发生错误" << endl;
+		return 0;
+	}
 	for (i = 0; i < num; i++)
 	{
-		fputs(str[i], fpw);
+		fputs(*(pchar + i), fpw);
 	}
 	fclose(fpw);
 
-
+	for (int i(0); i < n; i++)
+	{
+		pchar[i] = nullptr;
+		free(pchar[i]);
+	}
+	free(pchar);
 
 	system("pause");
 }
