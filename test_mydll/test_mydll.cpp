@@ -144,7 +144,8 @@ int main()
 		*(pchar + i) = (char*)calloc(1024*4,sizeof(char));
 	}
 	char linedata[4096] = { 0 };
-	FILE* fp = fopen("E:\\visualStudio_proj\\mydll\\x64\\Debug\\test.txt", "r");
+	//FILE* fp = fopen("E:\\visualStudio_proj\\mydll\\x64\\Debug\\test.txt", "r");
+	FILE* fp = fopen("F:\\vsstudio\\mydll\\x64\\Debug\\test.cs", "r");
 	if (fp == NULL) {
 		cout<<"打开文件时发生错误"<<endl;
 		return 0;
@@ -152,9 +153,9 @@ int main()
 	FILE* fpw;
 	while (fgets(linedata, sizeof(linedata) - 1, fp))
 	{
-		if (strcmp(linedata, "[{$1$}]\n") == 0|| strcmp(linedata, "[{$1$}]") == 0)
+		if (strcmp(linedata, "\t\t[{$1$}]\n") == 0|| strcmp(linedata, "\t\t[{$1$}]") == 0)
 		{
-			strcpy(*(pchar + i), "this\nis\ngenc\ntest\n");
+			strcpy(*(pchar + i), "\t\tpublic string genc {get;set;}\n\t\tpublic string genc {get;set;}\n\t\tpublic string genc {get;set;}\n\t\tpublic string genc {get;set;}\n");
 		}
 		else
 		{
@@ -164,7 +165,8 @@ int main()
 	}
 	fclose(fp);
 	num = i;
-	fpw = fopen("E:\\visualStudio_proj\\mydll\\x64\\Debug\\temp.txt", "w");
+	//fpw = fopen("E:\\visualStudio_proj\\mydll\\x64\\Debug\\temp.txt", "w");
+	fpw = fopen("F:\\vsstudio\\mydll\\x64\\Debug\\temp.cs", "w");
 	if (fpw == NULL) {
 		cout << "打开文件时发生错误" << endl;
 		return 0;
