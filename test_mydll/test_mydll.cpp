@@ -26,6 +26,30 @@ vector<string> split(const string& str, const string& pattern)
 		ret.push_back(str.substr(start));
 	return ret;
 }
+
+vector<vector<string>> mulsplit(const string& str, const string& pattern, const string& pattern2) {
+	vector<vector<string>> ret;
+	vector<string> temp;
+	vector<string> _temp=split(str, pattern);
+
+	for (auto val : _temp)
+	{
+
+		size_t start = 0, index = val.find_first_of(pattern2, 0);
+		while (index != val.npos)
+		{
+			if (start != index)
+				temp.push_back(val.substr(start, index - start));
+			start = index + 1;
+			index = val.find_first_of(pattern2, start);
+		}
+		if (!val.substr(start).empty())
+			temp.push_back(val.substr(start));
+	}
+
+	ret.push_back(temp);
+	return ret;	
+}
 int main()
 {
 #pragma region demo
@@ -101,10 +125,10 @@ int main()
 
 
 #pragma region test_dll_dasource
-	typedef int(*QBASEFUNC)(const char* db_url, char** result);
+	typedef int(*QBASEFUNC)(const char* db_url, const char* db_name, const char* dt_name, char** result);
 	HINSTANCE hDllInst;
 	hDllInst = LoadLibrary("dtsource.dll");
-	QBASEFUNC q_rcnum = (QBASEFUNC)GetProcAddress(hDllInst, "q_db");
+	QBASEFUNC q_rcnum = (QBASEFUNC)GetProcAddress(hDllInst, "q_type");
 	const char* db_url =(char *)malloc(1024 * sizeof(char));
 	const char* db_name =(char *)malloc(128 * sizeof(char));
 	const char* dt_name =(char *)malloc(128 * sizeof(char));
@@ -121,7 +145,7 @@ int main()
 		*(pchar + i) = (char*)malloc(64*1819*sizeof(char));
 	}
 
-	int stat=q_rcnum(db_url,pchar);
+	int stat=q_rcnum(db_url,db_name,dt_name,pchar);
 	if (stat == 1) {
 		cout << "status：" << *(pchar + 0) << endl;
 		cout << "clumsize：" << *(pchar + 3) << endl;
@@ -131,11 +155,23 @@ int main()
 		cout << "rc_name：" << *(pchar + 7) << endl;
 		cout << endl;
 		string pattern = "#";
+		string pattern1 = "$";
 		vector<string> vec_rc_name = split(*(pchar + 7), pattern);
 		for (auto val : vec_rc_name)
 		{
 			cout << val << endl;
 		}
+
+		vector<vector<string>> result = mulsplit(*(pchar + 7), pattern, pattern1);
+		for (int i(0); i < result.size(); i++) {
+			for (int j(0); j < result[0].size(); ++j) {
+				if (j % 5 == 0) {
+					cout << endl;
+				}
+				cout << result[i][j] << "       ";
+			}
+		}
+		cout << endl;
 	}
 	else {
 		cout << "status：" << *(pchar + 0) << endl;
