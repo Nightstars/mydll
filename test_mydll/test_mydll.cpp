@@ -10,7 +10,22 @@ using namespace std;
 #include <numeric> // for std::accumulate
 #include<iostream>
 #include<fstream>
-
+vector<string> split(const string& str, const string& pattern)
+{
+	vector<string> ret;
+	if (pattern.empty()) return ret;
+	size_t start = 0, index = str.find_first_of(pattern, 0);
+	while (index != str.npos)
+	{
+		if (start != index)
+			ret.push_back(str.substr(start, index - start));
+		start = index + 1;
+		index = str.find_first_of(pattern, start);
+	}
+	if (!str.substr(start).empty())
+		ret.push_back(str.substr(start));
+	return ret;
+}
 int main()
 {
 #pragma region demo
@@ -86,48 +101,55 @@ int main()
 
 
 #pragma region test_dll_dasource
-	//typedef int(*QBASEFUNC)(const char* db_url, const char* db_name, const char* db_sql, char** result);
-	//HINSTANCE hDllInst;
-	//hDllInst = LoadLibrary("dtsource.dll");
-	//QBASEFUNC q_rcnum = (QBASEFUNC)GetProcAddress(hDllInst, "q_rc");
-	//const char* db_url =(char *)malloc(1024 * sizeof(char));
-	//const char* db_name =(char *)malloc(128 * sizeof(char));
-	//const char* dt_name =(char *)malloc(128 * sizeof(char));
-	//const char* db_sql =(char *)malloc(4096 * sizeof(char));
-	//db_url = "Provider=SQLOLEDB; Server=192.168.0.187,1433\MSSQLSERVER;Database=CMS; uid=sa; pwd=Ihavenoidea@0;";
-	//db_name= "PUB_PARA";
-	//dt_name= "CURR";
-	//db_sql= "SELECT * FROM CURR";
-	//int n(8);
-	//char** pchar = NULL;
-	//pchar = (char**)malloc(n* sizeof(char*)); // pchar其实就是一个char * []数组
-	//for (int i(0); i < n; i++)
-	//{
-	//	*(pchar + i) = (char*)malloc(64*1819*sizeof(char));
-	//}
+	typedef int(*QBASEFUNC)(const char* db_url, char** result);
+	HINSTANCE hDllInst;
+	hDllInst = LoadLibrary("dtsource.dll");
+	QBASEFUNC q_rcnum = (QBASEFUNC)GetProcAddress(hDllInst, "q_db");
+	const char* db_url =(char *)malloc(1024 * sizeof(char));
+	const char* db_name =(char *)malloc(128 * sizeof(char));
+	const char* dt_name =(char *)malloc(128 * sizeof(char));
+	const char* db_sql =(char *)malloc(4096 * sizeof(char));
+	db_url = "Provider=SQLOLEDB; Server=192.168.0.187,1433\MSSQLSERVER;Database=CMS; uid=sa; pwd=Ihavenoidea@0;";
+	db_name= "PUB_PARA";
+	dt_name= "CURR";
+	db_sql= "SELECT * FROM CURR";
+	int n(8);
+	char** pchar = NULL;
+	pchar = (char**)malloc(n* sizeof(char*)); // pchar其实就是一个char * []数组
+	for (int i(0); i < n; i++)
+	{
+		*(pchar + i) = (char*)malloc(64*1819*sizeof(char));
+	}
 
-	//int stat=q_rcnum(db_url,db_name,db_sql,pchar);
-	//if (stat == 1) {
-	//	cout << "status：" << *(pchar + 0) << endl;
-	//	cout << "clumsize：" << *(pchar + 3) << endl;
-	//	cout << "clums：" << *(pchar + 4) << endl;
-	//	cout << "recoders：" << *(pchar + 5) << endl;
-	//	cout << "clum_name：" << *(pchar + 6) << endl;
-	//	cout << "rc_name：" << *(pchar + 7) << endl;
-	//}
-	//else {
-	//	cout << "status：" << *(pchar + 0) << endl;
-	//	cout << "Description：" <<*(pchar + 1) << endl;
-	//}
-	//
-	//
-	//FreeLibrary(hDllInst);
-	//for (int i(0); i < n; i++)
-	//{
-	//	pchar[i] = nullptr;
-	//	free(pchar[i]);
-	//}
-	//free(pchar);
+	int stat=q_rcnum(db_url,pchar);
+	if (stat == 1) {
+		cout << "status：" << *(pchar + 0) << endl;
+		cout << "clumsize：" << *(pchar + 3) << endl;
+		cout << "clums：" << *(pchar + 4) << endl;
+		cout << "recoders：" << *(pchar + 5) << endl;
+		cout << "clum_name：" << *(pchar + 6) << endl;
+		cout << "rc_name：" << *(pchar + 7) << endl;
+		cout << endl;
+		string pattern = "#";
+		vector<string> vec_rc_name = split(*(pchar + 7), pattern);
+		for (auto val : vec_rc_name)
+		{
+			cout << val << endl;
+		}
+	}
+	else {
+		cout << "status：" << *(pchar + 0) << endl;
+		cout << "Description：" <<*(pchar + 1) << endl;
+	}
+	
+	
+	FreeLibrary(hDllInst);
+	for (int i(0); i < n; i++)
+	{
+		pchar[i] = nullptr;
+		free(pchar[i]);
+	}
+	free(pchar);
 #pragma endregion
 
 	//fstream fs("F:\\vsstudio\\mydll\\x64\\Debug\\test.txt", ios::binary | ios::out | ios::in);
@@ -136,53 +158,53 @@ int main()
 	//fs.write("\r\n!\r\n!\r\n!", 15);
 	//fs.close();
 
-	int i = 0, num, n(50);
-	char** pchar = NULL;
-	pchar = (char**)malloc(n* sizeof(char*)); // pchar其实就是一个char * []数组
-	for (int i(0); i < n; i++)
-	{
-		*(pchar + i) = (char*)calloc(1024*4,sizeof(char));
-	}
-	char linedata[4096] = { 0 };
-	//FILE* fp = fopen("E:\\visualStudio_proj\\mydll\\x64\\Debug\\test.txt", "r");
-	FILE* fp = fopen("F:\\vsstudio\\mydll\\x64\\Debug\\test.cs", "r");
-	if (fp == NULL) {
-		cout<<"打开文件时发生错误"<<endl;
-		return 0;
-	}
-	FILE* fpw;
-	while (fgets(linedata, sizeof(linedata) - 1, fp))
-	{
-		if (strcmp(linedata, "\t\t[{$1$}]\n") == 0|| strcmp(linedata, "\t\t[{$1$}]") == 0)
-		{
-			strcpy(*(pchar + i), "\t\tpublic string genc {get;set;}\n\t\tpublic string genc {get;set;}\n\t\tpublic string genc {get;set;}\n\t\tpublic string genc {get;set;}\n");
-		}
-		else
-		{
-			strcpy(*(pchar + i), linedata);
-		}
-		i++;
-	}
-	fclose(fp);
-	num = i;
-	//fpw = fopen("E:\\visualStudio_proj\\mydll\\x64\\Debug\\temp.txt", "w");
-	fpw = fopen("F:\\vsstudio\\mydll\\x64\\Debug\\temp.cs", "w");
-	if (fpw == NULL) {
-		cout << "打开文件时发生错误" << endl;
-		return 0;
-	}
-	for (i = 0; i < num; i++)
-	{
-		fputs(*(pchar + i), fpw);
-	}
-	fclose(fpw);
+	//int i = 0, num, n(50);
+	//char** pchar = NULL;
+	//pchar = (char**)malloc(n* sizeof(char*)); // pchar其实就是一个char * []数组
+	//for (int i(0); i < n; i++)
+	//{
+	//	*(pchar + i) = (char*)calloc(1024*4,sizeof(char));
+	//}
+	//char linedata[4096] = { 0 };
+	////FILE* fp = fopen("E:\\visualStudio_proj\\mydll\\x64\\Debug\\test.txt", "r");
+	//FILE* fp = fopen("F:\\vsstudio\\mydll\\x64\\Debug\\test.cs", "r");
+	//if (fp == NULL) {
+	//	cout<<"打开文件时发生错误"<<endl;
+	//	return 0;
+	//}
+	//FILE* fpw;
+	//while (fgets(linedata, sizeof(linedata) - 1, fp))
+	//{
+	//	if (strcmp(linedata, "\t\t[{$1$}]\n") == 0|| strcmp(linedata, "\t\t[{$1$}]") == 0)
+	//	{
+	//		strcpy(*(pchar + i), "\t\tpublic string genc {get;set;}\n\t\tpublic string genc {get;set;}\n\t\tpublic string genc {get;set;}\n\t\tpublic string genc {get;set;}\n");
+	//	}
+	//	else
+	//	{
+	//		strcpy(*(pchar + i), linedata);
+	//	}
+	//	i++;
+	//}
+	//fclose(fp);
+	//num = i;
+	////fpw = fopen("E:\\visualStudio_proj\\mydll\\x64\\Debug\\temp.txt", "w");
+	//fpw = fopen("F:\\vsstudio\\mydll\\x64\\Debug\\temp.cs", "w");
+	//if (fpw == NULL) {
+	//	cout << "打开文件时发生错误" << endl;
+	//	return 0;
+	//}
+	//for (i = 0; i < num; i++)
+	//{
+	//	fputs(*(pchar + i), fpw);
+	//}
+	//fclose(fpw);
 
-	for (int i(0); i < n; i++)
-	{
-		pchar[i] = nullptr;
-		free(pchar[i]);
-	}
-	free(pchar);
+	//for (int i(0); i < n; i++)
+	//{
+	//	pchar[i] = nullptr;
+	//	free(pchar[i]);
+	//}
+	//free(pchar);
 
 	system("pause");
 }
