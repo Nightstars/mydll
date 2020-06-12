@@ -10,6 +10,7 @@ using namespace std;
 #include <numeric> // for std::accumulate
 #include<iostream>
 #include<fstream>
+
 vector<string> split(const string& str, const string& pattern)
 {
 	vector<string> ret;
@@ -133,7 +134,8 @@ int main()
 	const char* db_name =(char *)malloc(128 * sizeof(char));
 	const char* dt_name =(char *)malloc(128 * sizeof(char));
 	const char* db_sql =(char *)malloc(4096 * sizeof(char));
-	db_url = "Provider=SQLOLEDB; Server=192.168.0.187,1433\MSSQLSERVER;Database=CMS; uid=sa; pwd=Ihavenoidea@0;";
+	//db_url = "Provider=SQLOLEDB; Server=192.168.0.187,1433\MSSQLSERVER;Database=CMS; uid=sa; pwd=Ihavenoidea@0;";
+	db_url = "Provider=SQLOLEDB; Server=192.168.0.108,6666\SMARTCODER;Database=CMS; uid=sa; pwd=123456;";
 	db_name= "PUB_PARA";
 	dt_name= "CURR";
 	db_sql= "SELECT * FROM CURR";
@@ -161,6 +163,36 @@ int main()
 		{
 			cout << val << endl;
 		}
+
+#pragma region split
+		//字符分割
+		typedef int(*SPLITFUNC)(const char* parm, const char* pattern, char** result);
+		HINSTANCE sutilsDllInst;
+		sutilsDllInst = LoadLibrary("sutils.dll");
+		SPLITFUNC split_char = (SPLITFUNC)GetProcAddress(sutilsDllInst, "split_char");
+		char**  split_res = (char**)malloc(30 * sizeof(char*));
+		for (int i(0); i < 30; i++)
+		{
+			*(split_res + i) = (char*)calloc(128,sizeof(char));
+		}
+		const char* split_pattern = "#";
+		if (1 == split_char(*(pchar + 7), split_pattern, split_res)) {
+			for (int i(0); i < 128; i++) {
+				if (!strcmp(*(split_res + i),"0")) {
+					cout<<"this is sutils result :"<<endl;
+					cout<< *(pchar + i)<<endl;
+				}
+			}
+		}
+		FreeLibrary(sutilsDllInst);
+			for (int i(0); i < 30; i++)
+			{
+				split_res[i] = nullptr;
+				free(split_res[i]);
+			}
+		free(split_res);
+#pragma endregion
+
 
 		vector<vector<string>> result = mulsplit(*(pchar + 7), pattern, pattern1);
 		for (int i(0); i < result.size(); i++) {
