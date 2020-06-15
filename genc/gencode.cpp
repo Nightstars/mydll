@@ -2,6 +2,7 @@
 #include "gencode.h"
 #include <cstdio>
 #include <string>
+#include <vector>
 using namespace std;
 #pragma warning(disable : 4996)
 
