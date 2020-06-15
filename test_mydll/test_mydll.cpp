@@ -126,28 +126,28 @@ int main()
 
 
 #pragma region test_dll_dasource
-	typedef int(*QBASEFUNC)(const char* db_url, const char* db_name, const char* dt_name, char** result);
+	typedef int(*QBASEFUNC)(const char* db_url, char** result);
 	HINSTANCE hDllInst;
 	hDllInst = LoadLibrary("dtsource.dll");
-	QBASEFUNC q_rcnum = (QBASEFUNC)GetProcAddress(hDllInst, "q_type");
+	QBASEFUNC q_rcnum = (QBASEFUNC)GetProcAddress(hDllInst, "q_db");
 	const char* db_url =(char *)malloc(1024 * sizeof(char));
 	const char* db_name =(char *)malloc(128 * sizeof(char));
 	const char* dt_name =(char *)malloc(128 * sizeof(char));
 	const char* db_sql =(char *)malloc(4096 * sizeof(char));
 	//db_url = "Provider=SQLOLEDB; Server=192.168.0.187,1433\MSSQLSERVER;Database=CMS; uid=sa; pwd=Ihavenoidea@0;";
 	db_url = "Provider=SQLOLEDB; Server=192.168.0.108,6666\SMARTCODER;Database=CMS; uid=sa; pwd=123456;";
-	db_name= "PUB_PARA";
-	dt_name= "CURR";
+	db_name= "CMS";
+	dt_name= "COP_ACT_HEAD";
 	db_sql= "SELECT * FROM CURR";
 	int n(8);
 	char** pchar = NULL;
 	pchar = (char**)malloc(n* sizeof(char*)); // pchar其实就是一个char * []数组
 	for (int i(0); i < n; i++)
 	{
-		*(pchar + i) = (char*)malloc(64*1819*sizeof(char));
+		*(pchar + i) = (char*)calloc(64*1819,sizeof(char));
 	}
 
-	int stat=q_rcnum(db_url,db_name,dt_name,pchar);
+	int stat=q_rcnum(db_url,pchar);
 	if (stat == 1) {
 		cout << "status：" << *(pchar + 0) << endl;
 		cout << "clumsize：" << *(pchar + 3) << endl;
@@ -173,15 +173,16 @@ int main()
 		char**  split_res = (char**)malloc(30 * sizeof(char*));
 		for (int i(0); i < 30; i++)
 		{
-			*(split_res + i) = (char*)calloc(128,sizeof(char));
+			*(split_res + i) = (char*)malloc(128*sizeof(char));
 		}
-		const char* split_pattern = "#";
+		const char* split_pattern = (char*)malloc(128 * sizeof(char));
+		split_pattern =const_cast<char *>("#");
+		cout << "this is sutils result :" << endl;
 		if (1 == split_char(*(pchar + 7), split_pattern, split_res)) {
-			for (int i(0); i < 128; i++) {
-				if (!strcmp(*(split_res + i),"0")) {
-					cout<<"this is sutils result :"<<endl;
-					cout<< *(pchar + i)<<endl;
-				}
+			for (int i(0); i < 10; i++) {
+				//if (!strcmp(*(split_res + i),"0")) {
+					cout<< *(split_res + i)<<endl;
+				//}
 			}
 		}
 		FreeLibrary(sutilsDllInst);
@@ -194,7 +195,7 @@ int main()
 #pragma endregion
 
 
-		vector<vector<string>> result = mulsplit(*(pchar + 7), pattern, pattern1);
+		/*vector<vector<string>> result = mulsplit(*(pchar + 7), pattern, pattern1);
 		for (int i(0); i < result.size(); i++) {
 			for (int j(0); j < result[0].size(); ++j) {
 				if (j % 5 == 0) {
@@ -203,7 +204,7 @@ int main()
 				cout << result[i][j] << "       ";
 			}
 		}
-		cout << endl;
+		cout << endl;*/
 	}
 	else {
 		cout << "status：" << *(pchar + 0) << endl;

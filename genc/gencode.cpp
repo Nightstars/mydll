@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <string>
 using namespace std;
+#pragma warning(disable : 4996)
 
 int q_rcnum(const char** parm, char* result)
 {
@@ -20,4 +21,20 @@ int q_rcnum(const char** parm, char* result)
 	//close file
 	fclose(fpw);
 	return 1;
+}
+vector<string> split(const string& str, const string& pattern)
+{
+	vector<string> ret;
+	if (pattern.empty()) return ret;
+	size_t start = 0, index = str.find_first_of(pattern, 0);
+	while (index != str.npos)
+	{
+		if (start != index)
+			ret.push_back(str.substr(start, index - start));
+		start = index + 1;
+		index = str.find_first_of(pattern, start);
+	}
+	if (!str.substr(start).empty())
+		ret.push_back(str.substr(start));
+	return ret;
 }
