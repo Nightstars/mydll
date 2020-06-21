@@ -155,42 +155,35 @@ int main()
 		cout << "recoders：" << *(pchar + 5) << endl;
 		cout << "clum_name：" << *(pchar + 6) << endl;
 		cout << "rc_name：" << *(pchar + 7) << endl;
-		cout << endl;
-		string pattern = "#";
-		string pattern1 = "$";
-		vector<string> vec_rc_name = split(*(pchar + 7), pattern);
-		for (auto val : vec_rc_name)
-		{
-			cout << val << endl;
-		}
 
 #pragma region split
 		//字符分割
-		typedef int(*SPLITFUNC)(const char* parm, const char* pattern, char** result);
+		typedef int(*SPLITFUNC)(char* src, const char* separator, char** dest, int* num);
 		HINSTANCE sutilsDllInst;
 		sutilsDllInst = LoadLibrary("sutils.dll");
-		SPLITFUNC split_char = (SPLITFUNC)GetProcAddress(sutilsDllInst, "split_char");
-		char**  split_res = (char**)malloc(30 * sizeof(char*));
+		SPLITFUNC split_char = (SPLITFUNC)GetProcAddress(sutilsDllInst, "split");
+		//初始化二维指针存储分割结果
+		char** split_res = (char**)malloc(30 * sizeof(char*));
 		for (int i(0); i < 30; i++)
 		{
-			*(split_res + i) = (char*)malloc(128*sizeof(char));
+			*(split_res + i) = (char*)calloc(128, sizeof(char));
 		}
-		const char* split_pattern = (char*)malloc(128 * sizeof(char));
-		split_pattern =const_cast<char *>("#");
+		//分割后子字符串的个数
+		int num = 0;
+		//分割
+		int rs=split_char(*(pchar + 7), "#", split_res, &num);
 		cout << "this is sutils result :" << endl;
-		if (1 == split_char(*(pchar + 7), split_pattern, split_res)) {
-			for (int i(0); i < 10; i++) {
-				//if (!strcmp(*(split_res + i),"0")) {
-					cout<< *(split_res + i)<<endl;
-				//}
-			}
+		for (int i = 0; i < num; i++) {
+			cout << *(split_res + i) << endl;
 		}
+		//释放dll
 		FreeLibrary(sutilsDllInst);
-			for (int i(0); i < 30; i++)
-			{
-				split_res[i] = nullptr;
-				free(split_res[i]);
-			}
+		//释放二维指针
+		for (int i(0); i < 30; i++)
+		{
+			split_res[i] = nullptr;
+			free(split_res[i]);
+		}
 		free(split_res);
 #pragma endregion
 
