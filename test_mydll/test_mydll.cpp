@@ -11,6 +11,8 @@ using namespace std;
 #include<iostream>
 #include<fstream>
 
+#pragma region split
+
 vector<string> split(const string& str, const string& pattern)
 {
 	vector<string> ret;
@@ -51,6 +53,8 @@ vector<vector<string>> mulsplit(const string& str, const string& pattern, const 
 	ret.push_back(temp);
 	return ret;	
 }
+#pragma endregion
+
 int main()
 {
 #pragma region demo
@@ -156,7 +160,7 @@ int main()
 		cout << "clum_name：" << *(pchar + 6) << endl;
 		cout << "rc_name：" << *(pchar + 7) << endl;
 
-#pragma region split
+		#pragma region split
 		//字符分割
 		typedef int(*SPLITFUNC)(char* src, const char* separator, char** dest, int* num);
 		HINSTANCE sutilsDllInst;
@@ -185,7 +189,7 @@ int main()
 			free(split_res[i]);
 		}
 		free(split_res);
-#pragma endregion
+		#pragma endregion
 
 
 		/*vector<vector<string>> result = mulsplit(*(pchar + 7), pattern, pattern1);
